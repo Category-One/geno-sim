@@ -1,0 +1,48 @@
+name: sweep_dm_failure
+seed: 1
+n_steps: 120
+steps_per_year: 12
+notes: >
+  DEVELOPED MARKET failure boundary. The high-inflation sweep cannot
+  fail: a 30% gain clears any plausible risk premium, so 96% of its cells
+  were self-sustaining and 0% stalled, which identifies no boundary at all.
+  Here the ~3% gain is the same order as the premium demanded and as churn,
+  so the model can actually fail. Churn is swept for the same reason.
+  Sweeps every UNMEASURED parameter across its plausible range. This is the
+  primary deliverable of the demand model: the results that hold across the
+  whole grid are the defensible findings; a single cell is not a forecast.
+
+  Findings that held across all cells in prior runs:
+    1. Awareness dominates. ~21x the leverage of round-trip spread and far
+       more than the trust threshold.
+    2. Local-currency pool >> USD-stablecoin pool as an adoption source
+       (4:1 to 47:1 depending on dollar tail-risk assumptions).
+    3. Ten-year outcomes are RATE-limited, not ceiling-limited: a 1.8x wider
+       saturation assumption yields well under 1.8x adoption.
+
+market:
+  name: developed
+  households: 100000
+  local_inflation: 0.03
+  us_inflation: 0.03
+  median_balance: 9000.0
+  pool_local: 0.93
+  pool_stable: 0.02
+  pool_other: 0.05
+  annual_drawdown_fraction: 0.12
+  smartphone_access: 0.95
+
+product:
+  roundtrip_spread: 0.01
+  spread_floor: 0.002
+
+adoption:
+  awareness_external: 0.10
+  awareness_internal: 0.40
+  trust_threshold_mean: 0.025
+
+sweep:
+  adoption.awareness_external:     [0.005, 0.02, 0.05, 0.10, 0.20]
+  adoption.trust_threshold_mean:   [0.010, 0.025, 0.045, 0.070]
+  adoption.churn_base:             [0.02, 0.05, 0.15, 0.30]
+  seed:                            [1, 2, 3]

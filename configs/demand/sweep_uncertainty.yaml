@@ -1,0 +1,46 @@
+name: sweep_uncertainty
+seed: 1
+n_steps: 120
+steps_per_year: 12
+notes: >
+  Sweeps every UNMEASURED parameter across its plausible range. This is the
+  primary deliverable of the demand model: the results that hold across the
+  whole grid are the defensible findings; a single cell is not a forecast.
+
+  Findings that held across all cells in prior runs:
+    1. Awareness dominates. ~21x the leverage of round-trip spread and far
+       more than the trust threshold.
+    2. Local-currency pool >> USD-stablecoin pool as an adoption source
+       (4:1 to 47:1 depending on dollar tail-risk assumptions).
+    3. Ten-year outcomes are RATE-limited, not ceiling-limited: a 1.8x wider
+       saturation assumption yields well under 1.8x adoption.
+
+market:
+  name: em_high_inflation
+  households: 100000
+  local_inflation: 0.30
+  us_inflation: 0.03
+  median_balance: 1500.0
+  pool_local: 0.55
+  pool_stable: 0.30
+  pool_other: 0.15
+  annual_drawdown_fraction: 0.30
+  smartphone_access: 0.75
+
+product:
+  roundtrip_spread: 0.01
+  spread_floor: 0.002
+
+adoption:
+  awareness_external: 0.10
+  awareness_internal: 0.40
+  trust_threshold_mean: 0.025
+
+sweep:
+  product.roundtrip_spread:        [0.0025, 0.005, 0.01, 0.02, 0.03]
+  adoption.awareness_external:     [0.005, 0.02, 0.05, 0.10, 0.20]
+  adoption.trust_threshold_mean:   [0.010, 0.025, 0.045]
+  market.dollar_stress_prob:       [0.0, 0.05, 0.10]
+  market.dollar_stress_severity:   [0.0, 0.20, 0.40]
+  adoption.launch_awareness_multiple: [1.0, 5.0, 20.0]
+  seed:                            [1, 2, 3]

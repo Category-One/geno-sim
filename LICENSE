@@ -1,0 +1,76 @@
+Copyright (c) 2026 Category One Limited (British Virgin Islands).
+All rights reserved.
+
+SOURCE-AVAILABLE LICENCE — VERIFICATION AND REVIEW
+
+This software and its accompanying documentation (the "Software") are made
+publicly available for the sole purpose of permitting independent inspection,
+execution and verification of the results published by Category One Limited.
+
+1. PERMITTED USE
+
+   Any person may, without charge:
+
+   (a) view, read and study the Software;
+   (b) download and execute the Software for the purpose of reproducing,
+       testing, examining or evaluating the published results;
+   (c) modify the Software locally in order to substitute alternative
+       assumptions or parameters and evaluate the effect;
+   (d) publish, cite, discuss or criticise the Software, its methodology,
+       its assumptions and its outputs, including results obtained from
+       locally modified copies, provided that any such results are not
+       represented as results published by Category One Limited.
+
+2. RESERVED RIGHTS
+
+   Except as expressly permitted above, all rights are reserved. Without
+   limitation, no licence is granted to:
+
+   (a) redistribute the Software, in original or modified form, whether or
+       not for charge;
+   (b) incorporate the Software, in whole or in part, into any other
+       product, service or work;
+   (c) use the Software or any part of it for any commercial purpose;
+   (d) sublicense, sell, lease or otherwise transfer the Software;
+   (e) remove or alter any copyright, licence or attribution notice.
+
+   No patent licence, trademark licence, or licence to any other
+   intellectual property of Category One Limited is granted by this
+   document, whether expressly, by implication, by estoppel or otherwise.
+
+3. NO WARRANTY
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+   OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, ACCURACY AND
+   NON-INFRINGEMENT. IN NO EVENT SHALL CATEGORY ONE LIMITED BE LIABLE FOR
+   ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+   TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+4. NATURE OF THE OUTPUTS
+
+   The Software is a simulation. Its outputs are conditional projections
+   derived from stated assumptions, many of which are unmeasured and are
+   swept across ranges rather than fixed. The outputs are not forecasts,
+   not predictions, and not statements of expected performance.
+
+   Nothing in the Software or its documentation constitutes an offer to
+   sell or a solicitation of an offer to buy any security or financial
+   instrument, and nothing in it constitutes investment, financial, legal
+   or tax advice.
+
+   Users are directed to the accompanying ASSUMPTIONS.md, which records the
+   evidential status of every parameter and states expressly what the model
+   cannot determine.
+
+5. GOVERNING LAW
+
+   This licence shall be governed by and construed in accordance with the
+   laws of the British Virgin Islands, and the parties submit to the
+   exclusive jurisdiction of the courts of the British Virgin Islands.
+
+6. CONTACT
+
+   Requests for rights beyond those granted above should be directed to
+   [CONTACT TO BE COMPLETED].

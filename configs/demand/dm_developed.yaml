@@ -1,0 +1,38 @@
+name: dm_developed
+seed: 20260813
+n_steps: 120
+steps_per_year: 12
+notes: >
+  Developed market (UK/US-type). Marginal gain is LOW for every pool:
+  local inflation ~3% equals US inflation, so households in local currency
+  gain no more than those already in USD. This is the structural reason
+  developed-market adoption stays small regardless of product quality.
+
+market:
+  name: developed
+  households: 100000
+  local_inflation: 0.03
+  us_inflation: 0.03
+  median_balance: 9000.0
+  balance_sigma: 1.2
+  pool_local: 0.93
+  pool_stable: 0.02
+  pool_other: 0.05
+  annual_drawdown_fraction: 0.12
+  smartphone_access: 0.95
+  dollar_stress_prob: 0.05
+  dollar_stress_severity: 0.20
+
+product:
+  protection_rate: 1.0
+  roundtrip_spread: 0.01
+  spread_floor: 0.002
+  redemption_fee: 0.07
+
+adoption:
+  awareness_external: 0.10
+  awareness_internal: 0.40
+  trust_threshold_mean: 0.025
+  trust_threshold_sd: 0.015
+  trust_decay_per_year: 0.10
+  churn_base: 0.05

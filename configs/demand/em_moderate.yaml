@@ -1,0 +1,38 @@
+name: em_moderate
+seed: 20260813
+n_steps: 120
+steps_per_year: 12
+notes: >
+  Emerging market, moderate inflation (India/Brazil/Indonesia-type).
+  Inflation 4-6%, NOT 30%. Applying a high-inflation conversion curve to
+  this pool was an error in earlier drafts and overstated the total
+  materially — this pool is ~8x the high-inflation pool by value.
+
+market:
+  name: em_moderate
+  households: 100000
+  local_inflation: 0.06
+  us_inflation: 0.03
+  median_balance: 2500.0
+  balance_sigma: 1.2
+  pool_local: 0.85
+  pool_stable: 0.08
+  pool_other: 0.07
+  annual_drawdown_fraction: 0.30
+  smartphone_access: 0.80
+  dollar_stress_prob: 0.05
+  dollar_stress_severity: 0.20
+
+product:
+  protection_rate: 1.0
+  roundtrip_spread: 0.01
+  spread_floor: 0.002
+  redemption_fee: 0.07
+
+adoption:
+  awareness_external: 0.10
+  awareness_internal: 0.40
+  trust_threshold_mean: 0.025
+  trust_threshold_sd: 0.015
+  trust_decay_per_year: 0.10
+  churn_base: 0.05

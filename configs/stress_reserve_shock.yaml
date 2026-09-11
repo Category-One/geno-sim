@@ -1,0 +1,32 @@
+name: stress_reserve_shock
+seed: 20260813
+notes: >
+  2008-style correlated drawdown in the reserve basket while claims stay
+  fixed at par. This is the failure mode specific to a redemption-backed
+  design: the floor breaks from the asset side, not from sentiment.
+
+reserve:
+  initial_reserve_value: 1000000.0
+  initial_claims: 1000000.0
+  redemption_ratio: 1.0
+  external_capital: 0.0
+  basket_weights: {tips: 0.4, gold: 0.3, equities: 0.2, cash: 0.1}
+  basket_vol:     {tips: 0.18, gold: 0.35, equities: 0.55, cash: 0.02}
+  basket_drift:   {tips: -0.10, gold: -0.15, equities: -0.40, cash: 0.0}
+
+mechanism:
+  fee_rate: 0.001
+  fee_split_to_reserve: 0.5
+  fee_split_to_geno: 0.5
+  theta_min: 0.5
+  theta_max: 4.0
+  geno_burn_rate: 0.02
+  velocity_window: 30
+  mirror_sensitivity: 1.0
+
+scenario:
+  n_steps: 360
+  steps_per_year: 360
+  fiat_expansion_rate: 0.05
+  oracle_lag: 1
+  oracle_noise: 0.0

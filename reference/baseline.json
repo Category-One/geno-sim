@@ -1,0 +1,20 @@
+{
+  "config_hash": "4dbcfc9e5215c5e70315d82108941136c02b7ad3fe5c1cc6dbd0dbf573228162",
+  "packages": {
+    "numpy": "2.4.4",
+    "pandas": "3.0.2",
+    "yaml": "6.0.3"
+  },
+  "python": "3.12.3",
+  "seed": 20260813,
+  "summary": {
+    "final_backing_ratio": 1.5359051012145535,
+    "final_price": 6.067551965348029,
+    "floor_breached": false,
+    "max_velocity": 5.721081152456444,
+    "min_backing_ratio": 0.9841234791564117,
+    "min_price": 1.0,
+    "price_drawdown": 0.8351888857794659,
+    "velocity_std_last_quarter": 1.045455161544207
+  }
+}

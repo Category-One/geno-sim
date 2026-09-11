@@ -1,0 +1,22 @@
+{
+  "config_hash": "c04a1db0a6920c889c5bccec8ec4b4fecbea519fce17d28ffccc208777cfaa6c",
+  "packages": {
+    "numpy": "2.4.4",
+    "pandas": "3.0.2",
+    "yaml": "6.0.3"
+  },
+  "python": "3.12.3",
+  "seed": 20260813,
+  "summary": {
+    "churned_ever": 11702,
+    "final_balances_usd": 103002446.50252134,
+    "final_from_local": 47883,
+    "final_from_stable": 1018,
+    "final_share_of_balances": 0.05538039685468863,
+    "final_share_of_households": 0.51487,
+    "final_spread": 0.00571250266850383,
+    "peak_share": 0.05538039685468863,
+    "self_sustaining": true,
+    "stalled": false
+  }
+}

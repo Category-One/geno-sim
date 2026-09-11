@@ -1,0 +1,39 @@
+name: stress_redemption_run
+seed: 20260813
+notes: >
+  40% of claims presented for redemption in a single step, with a 5-step
+  settlement lag, during a demand collapse. The lag is the point: an
+  enforceable floor that settles slowly behaves like no floor during the
+  window, which is where the arbitrage that supports price is supposed to
+  happen.
+
+reserve:
+  initial_reserve_value: 1000000.0
+  initial_claims: 1000000.0
+  redemption_ratio: 1.0
+  external_capital: 0.0
+  basket_weights: {tips: 0.4, gold: 0.3, equities: 0.2, cash: 0.1}
+  basket_vol:     {tips: 0.08, gold: 0.20, equities: 0.30, cash: 0.005}
+  basket_drift:   {tips: 0.0, gold: 0.0, equities: -0.10, cash: 0.01}
+
+mechanism:
+  fee_rate: 0.001
+  fee_split_to_reserve: 0.5
+  fee_split_to_geno: 0.5
+  theta_min: 0.5
+  theta_max: 4.0
+  geno_burn_rate: 0.02
+  velocity_window: 30
+  mirror_sensitivity: 1.0
+
+scenario:
+  n_steps: 360
+  steps_per_year: 360
+  fiat_expansion_rate: 0.05
+  demand_shock_step: 180
+  demand_shock_magnitude: -0.60
+  redemption_run_step: 182
+  redemption_run_fraction: 0.40
+  redemption_settlement_lag: 5
+  oracle_lag: 1
+  oracle_noise: 0.01

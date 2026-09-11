@@ -1,0 +1,38 @@
+name: em_high_inflation
+seed: 20260813
+n_steps: 120
+steps_per_year: 12
+notes: >
+  Emerging market, high inflation (Argentina/Nigeria/Turkey-type).
+  Strongest conversion rates in the model, but the SMALLEST pool by value:
+  roughly 2% of the accessible total. All the supporting evidence for the
+  demand thesis comes from these markets; almost none of the money does.
+
+market:
+  name: em_high_inflation
+  households: 100000
+  local_inflation: 0.30
+  us_inflation: 0.03
+  median_balance: 1500.0
+  balance_sigma: 1.2
+  pool_local: 0.55
+  pool_stable: 0.30
+  pool_other: 0.15
+  annual_drawdown_fraction: 0.30
+  smartphone_access: 0.75
+  dollar_stress_prob: 0.05
+  dollar_stress_severity: 0.20
+
+product:
+  protection_rate: 1.0
+  roundtrip_spread: 0.01
+  spread_floor: 0.002
+  redemption_fee: 0.07
+
+adoption:
+  awareness_external: 0.10
+  awareness_internal: 0.40
+  trust_threshold_mean: 0.025
+  trust_threshold_sd: 0.015
+  trust_decay_per_year: 0.10
+  churn_base: 0.05

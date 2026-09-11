@@ -1,0 +1,51 @@
+name: sweep_complete
+seed: 1
+n_steps: 120
+steps_per_year: 12
+notes: >
+  COMPLETE SWEEP. Every unmeasured behavioural parameter in the model is
+  varied simultaneously across its plausible range. Nothing behavioural is
+  held fixed. This exists so the claim "we varied every assumption we could
+  not measure" is literally true rather than approximately true.
+
+  Parameters swept: awareness (external and internal/word-of-mouth),
+  adoption hazard, churn, trust premium, allocation-curve anchors, spread,
+  spread floor, drawdown fraction, launch campaign, and dollar tail risk.
+
+  Held fixed: inflation rates and smartphone access (cited), pool splits
+  (directional from Chainalysis), protection_rate and redemption_fee
+  (design parameters, not behavioural).
+
+market:
+  name: em_high_inflation
+  households: 25000
+  local_inflation: 0.30
+  us_inflation: 0.03
+  median_balance: 1500.0
+  pool_local: 0.55
+  pool_stable: 0.30
+  pool_other: 0.15
+  smartphone_access: 0.75
+
+product:
+  roundtrip_spread: 0.01
+  spread_floor: 0.002
+
+adoption:
+  awareness_external: 0.05
+  awareness_internal: 0.40
+  trust_threshold_mean: 0.025
+
+sweep:
+  adoption.awareness_external:        [0.005, 0.02, 0.05, 0.10, 0.20]
+  adoption.awareness_internal:        [0.15, 0.40, 0.80]
+  adoption.adoption_hazard:           [0.10, 0.25, 0.60]
+  adoption.churn_base:                [0.02, 0.05, 0.15]
+  adoption.trust_threshold_mean:      [0.010, 0.025, 0.045]
+  adoption.alloc_low:                 [0.10, 0.20, 0.35]
+  adoption.alloc_high:                [0.60, 0.75, 0.90]
+  adoption.launch_awareness_multiple: [1.0, 20.0]
+  product.roundtrip_spread:           [0.0025, 0.01, 0.03]
+  market.annual_drawdown_fraction:    [0.10, 0.30, 0.60]
+  market.dollar_stress_prob:          [0.0, 0.10]
+  seed:                               [1, 2]
