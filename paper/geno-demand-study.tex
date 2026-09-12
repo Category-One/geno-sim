@@ -1,0 +1,405 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.6cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf,justification=raggedright,singlelinecheck=false}
+\titleformat{\section}{\normalfont\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalfont\itshape}{\thesubsection}{0.6em}{}
+\setlength{\parskip}{0.4em}
+\setlength{\parindent}{0pt}
+\onehalfspacing
+
+\title{\normalsize\bfseries Retail Demand for a Counter-Inflation Currency:\\
+A Simulation Under Explicit Assumptions}
+\author{\normalsize Category One Limited}
+\date{\normalsize Model version 3 \quad\textbullet\quad Draft}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent\small
+This study simulates retail adoption of a monetary instrument offering
+protection against loss of purchasing power. It asks what share of household
+savings would move into such an instrument over ten years, given stated
+assumptions about how households learn of it, gain access to it, and come to
+trust it. The instrument's protective property is taken as an input and is
+not tested. Seventeen behavioural parameters with no direct measurement were
+sampled simultaneously from continuous ranges across 8{,}000 draws, split
+between a developed-market and a high-inflation specification. Adoption
+occurred in 99.92 per cent of developed-market samples and in all
+high-inflation samples. Median ten-year outcomes were 13.2 and 12.5 per cent
+of household savings balances respectively, with fifth percentiles of 1.1 and
+3.9 per cent. The binding constraint differs by market: trust in developed
+economies, awareness where inflation is high. No dataset exists on
+general-public demand for an instrument of this kind, and the study does not
+constitute one.
+\end{abstract}
+
+\section{Scope}
+
+This is a simulation of retail adoption. It does not predict adoption; it
+shows what follows from its assumptions. It does not validate the
+instrument: full purchasing-power protection enters as a parameter
+$\pi = 1$, taken as given per the system's specification, and every result
+is conditional on that holding. It does not measure demand; no dataset on
+general-public demand for an inflation-protected savings instrument exists,
+and every available source either samples existing cryptocurrency users or
+measures a different product. It does not model commercial or regulatory
+feasibility, with the exception noted in Section~7.
+
+The central result is not a point estimate. It is that adoption occurs
+across essentially the entire sampled parameter space, including at its
+pessimistic extremes.
+
+\section{Model}
+
+An agent-based discrete-time model over monthly steps $t = 0, \dots, T$ with
+$T = 120$, run over populations of $n$ synthetic households per market.
+
+Each household $i$ carries a savings balance $b_i$ drawn lognormally, a
+current holding $h_i \in \{L, S, O\}$ denoting local currency, US-dollar
+stablecoin, or other store of value, an annual savings-drawdown fraction
+$d_i$, a trust threshold $\theta_i$, and binary states for awareness and
+account access.
+
+\subsection{Marginal gain}
+
+The annual benefit from adoption depends on current holding, not on
+location:
+\begin{equation}
+g_i =
+\pi \cdot
+\begin{cases}
+\iota_L & h_i = L\\[2pt]
+\iota_U + \rho\sigma & h_i = S\\[2pt]
+\tfrac{1}{2}\iota_U + \rho\sigma & h_i = O
+\end{cases}
+\end{equation}
+where $\iota_L$ is local inflation, $\iota_U$ US inflation, $\rho$ the
+perceived annual probability of a dollar stress event and $\sigma$ its
+severity.
+
+This asymmetry is the model's central economic mechanic. A household holding
+Argentine pesos gains approximately $0.30$; one already holding a
+dollar-denominated stablecoin gains approximately $0.03$, identically in
+Buenos Aires and in London. Treating these as one population is the
+principal source of overstatement in conventional total-addressable-market
+estimates.
+
+\subsection{Access}
+
+Day-one access is restricted to households already holding a cryptocurrency
+exchange account. In-app threshold-signature wallets combined with
+decentralised-exchange liquidity render purchase a two-step operation for
+that group, requiring no listing decision by any venue. Households without
+an account must first open one and complete identity verification.
+
+Account penetration grows toward a ceiling:
+\begin{equation}
+a(t) = \min\!\left(a_0 (1+\gamma)^{t/12},\; \bar{a}\right)
+\end{equation}
+with $a_0$ current penetration, $\gamma$ annual growth and $\bar{a}$ the
+long-run ceiling. Household $i$ has access at $t$ if $u_i < a(t)$, where
+$u_i \sim U(0,1)$ is drawn once.
+
+\subsection{Salience}
+
+Protection-motivated switching is rapid when a threat is vivid and slow
+otherwise. Salience combines a baseline, decaying endogenous events, and a
+constant manufactured component:
+\begin{equation}
+s(t) = \min\!\left(s_0 + \sum_{k} m_k \, 2^{-(t - t_k)/\lambda}
+\,\mathbf{1}[t \ge t_k] + c,\; 1\right)
+\end{equation}
+where $(t_k, m_k)$ are event times and magnitudes, $\lambda$ the half-life
+in months, and $c$ the manufactured component.
+
+\subsection{Trust}
+
+The trust threshold is an absolute required excess return, reduced by
+salience and by discrete validation events:
+\begin{equation}
+\theta_i(t) = \theta_i \left(1 - \tau s(t)\right)
+\prod_{j : t \ge t_j} (1 - e_j)
+\end{equation}
+with $\tau$ the salience effect and $(t_j, e_j)$ validation events and their
+effects. A household adopts only if $g_i - \phi(t) d_i > \theta_i(t)$, where
+$\phi(t)$ is the prevailing round-trip conversion spread.
+
+\subsection{Diffusion}
+
+Awareness spreads at different rates within and across the account-holding
+population. For household $i$ at step $t$, with $A(t)$ the adopted share of
+balances and $A_a(t)$ the adopted share among account holders:
+\begin{equation}
+p_i(t) =
+\begin{cases}
+\left(\alpha + \beta_{\text{in}} A_a(t)\right)/12 & \text{$i$ holds an account}\\[3pt]
+\left(\tfrac{1}{2}\alpha + \beta_{\text{ac}} A(t)\right)/12 & \text{otherwise}
+\end{cases}
+\end{equation}
+where $\alpha$ is external reach and $\beta_{\text{in}}, \beta_{\text{ac}}$
+are the within- and across-population word-of-mouth coefficients. The
+asymmetry reflects that a listener already holding an account can act
+immediately, whereas one without must first open an account.
+
+\subsection{Allocation}
+
+Allocation rises with experience rather than with the size of the benefit.
+For a household having held for $m_i$ months:
+\begin{equation}
+w_i(t) = \min\!\left(w_0 + r \frac{m_i}{12},\; \bar{w},\;
+1 - \min(d_i \kappa / 12,\, 0.9)\right)
+\end{equation}
+with $w_0$ the initial allocation, $r$ the annual ramp rate, $\bar{w}$ the
+ceiling and $\kappa$ the working buffer in months.
+
+This yields a testable implication: mean allocation across adopters remains
+below the ceiling for as long as adoption is growing, because recent
+entrants lower the average. In the baseline developed-market run, 48.4 per
+cent of households have adopted by year ten while mean allocation stands at
+39.8 per cent against a ceiling of 60 per cent.
+
+\section{Calibration}
+
+Diffusion speed is anchored on M-Pesa rather than on cryptocurrency
+adoption. M-Pesa reached 43 per cent of Kenyan households within seventeen
+months of its March 2007 launch and approximately 70 per cent within four
+years. Contemporary accounts attribute this to its agent network, which grew
+from 4{,}000 to 19{,}000 cash-in and cash-out outlets against roughly 850
+bank branches nationally, rather than to advertising. The inference drawn is
+that distribution infrastructure, not awareness, was the binding constraint.
+
+The trust threshold is set low but non-zero. Cohen and Dupas found
+insecticide-treated bed-net take-up near 75 per cent when free, falling to
+approximately 20 per cent at a small positive price; a discontinuity at
+zero rather than an elasticity. A no-premium protective instrument should
+therefore face a low barrier. It should not face none: a free bed net has no
+downside, whereas moving savings into a novel instrument carries perceived
+principal risk.
+
+Salience decay is anchored on the observed pattern in catastrophe insurance,
+where take-up rises after a nearby event and decays over subsequent years.
+
+\section{Data}
+
+\begin{table}[h]
+\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+Quantity & Source \\
+\midrule
+US household savings deposits & Federal Reserve Z.1, \texttt{BOGZ1FL193030205Q}, Q1 2026 \\
+UK household deposits & IMF Financial Access Survey, \texttt{GBRFCLODCHXDC} \\
+Japan household cash and deposits & Bank of Japan Flow of Funds, Q1 2026 \\
+China household savings & People's Bank of China \\
+India, Turkey, Argentina, Chile & IMF Financial Access Survey \\
+Euro area household deposits & Derived from European Central Bank \\
+Inflation rates & National consumer price indices \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Approximately 70 per cent of the savings-pool total is cited. The remainder
+is derived as nominal GDP multiplied by a household-deposit ratio banded
+against the two Financial Access Survey ratios retrieved, being India at
+39.9 per cent and Turkey at approximately 19 per cent. Brazil, Indonesia and
+Mexico do not report a household breakdown to the Survey, so complete
+citation is not attainable from this source.
+
+The denominator is household savings, not M2. M2 includes business deposits,
+transaction balances and money market fund shares, none of which are
+addressable; substituting it approximately doubles every figure.
+
+\subsection{Account penetration}
+
+Published estimates disagree materially, and the access parameter is
+sensitive to which is adopted. For the United States: Security.org's 2026
+consumer report gives 30 per cent of adults from 992 respondents; the
+National Cryptocurrency Association with Harris Poll gives approximately 25
+per cent; Motley Fool Money gives 22 per cent from 2{,}000 respondents; Pew
+Research Center gives approximately 20 per cent having ever used, from
+8{,}512 respondents; and the Federal Reserve's Survey of Household Economics
+and Decisionmaking, from a nationally representative sample of approximately
+13{,}000 adults surveyed in October 2025, gives 10 per cent having used or
+held within the past year, of which 7 per cent held as an investment.
+
+The Federal Reserve figure is the most methodologically rigorous and is
+three times lower than the commercial surveys. The discrepancy is partly
+definitional, since the Survey measures activity within the past year
+whereas the commercial surveys measure current ownership, and partly a
+matter of sampling frames.
+
+What this model requires is neither quantity exactly. Access requires a
+funded exchange account, which persists after a holder sells, and is
+therefore closer to having ever owned than to past-year activity. The
+baseline adopts the upper end on that reasoning; the parameter is swept, and
+this disagreement is the strongest argument for doing so.
+
+\section{Uncertainty}
+
+Behavioural parameters have no direct measurement, because no instrument of
+this kind has been offered to this population. Each is classified as cited,
+being traceable to a published figure; derived, being computed from cited
+figures with the calculation stated; anchored, being set against a
+documented reference class; or unmeasured, having a plausible range only and
+being swept rather than fixed. No parameter falls outside these categories.
+The full classification accompanies the code.
+
+\subsection{Global sensitivity}
+
+Seventeen parameters were sampled simultaneously from continuous ranges
+across 4{,}000 draws per market rather than varied individually.
+One-at-a-time sweeping holds remaining parameters at their defaults and
+systematically overstates the leading parameter's influence; an earlier
+version of this work reported a leverage ratio inflated by that method.
+
+\begin{table}[h]
+\small
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Parameter & Developed & High inflation \\
+\midrule
+Trust threshold & $-0.511$ & $-0.132$ \\
+External reach & $+0.287$ & $+0.408$ \\
+Allocation ceiling & $+0.273$ & $+0.379$ \\
+Account ceiling & $+0.255$ & $+0.349$ \\
+Salience effect on trust & $+0.221$ & $+0.140$ \\
+Account growth & $+0.211$ & $+0.320$ \\
+Allocation ramp rate & $+0.197$ & $+0.283$ \\
+Salience baseline & $+0.147$ & $+0.023$ \\
+Manufactured salience & $+0.146$ & $+0.014$ \\
+Word of mouth, within population & $+0.104$ & $+0.143$ \\
+Round-trip spread & $-0.104$ & $-0.041$ \\
+Churn & $-0.097$ & $-0.143$ \\
+Savings drawdown & $-0.078$ & $-0.013$ \\
+Initial allocation & $+0.071$ & $+0.105$ \\
+Salience half-life & $+0.063$ & $+0.056$ \\
+Adoption hazard & $+0.044$ & $+0.060$ \\
+Word of mouth, across populations & $+0.023$ & $+0.028$ \\
+\bottomrule
+\end{tabular}
+\caption{Spearman rank correlation with ten-year share of household savings
+balances. 4{,}000 draws per market.}
+\end{table}
+
+No parameter dominates. The binding constraint differs by market: trust in
+developed economies, at approximately twice the influence of any other
+parameter, and awareness where inflation is high. Manufactured salience
+registers in developed markets and is negligible in high-inflation ones,
+consistent with a campaign being unable to add vividness to a threat already
+experienced directly.
+
+\subsection{Outcome distribution}
+
+\begin{table}[h]
+\small
+\begin{tabular}{@{}lrr@{}}
+\toprule
+& Developed & High inflation \\
+\midrule
+Minimum & 0.04\% & 0.99\% \\
+5th percentile & 1.12\% & 3.87\% \\
+25th percentile & 6.13\% & 8.09\% \\
+Median & 13.21\% & 12.54\% \\
+75th percentile & 21.63\% & 18.31\% \\
+95th percentile & 37.82\% & 30.63\% \\
+Maximum & 73.87\% & 58.04\% \\
+\midrule
+Samples with adoption & 99.92\% & 100.00\% \\
+Samples self-sustaining at year ten & 92.0\% & 98.8\% \\
+\bottomrule
+\end{tabular}
+\caption{Distribution of ten-year outcomes as a share of household savings
+balances, across 4{,}000 draws per market.}
+\end{table}
+
+Across 8{,}000 samples spanning seventeen simultaneously varied unmeasured
+parameters, adoption occurred in all but three.
+
+\section{Reproducibility}
+
+A run is fully determined by its configuration file and seed. No global
+random number generator, no wall-clock time and no environment variable
+enters the model. Each run writes a manifest recording the configuration
+hash, seed, commit hash, library versions and a checksum of every output.
+Reference fixtures are committed, and the test suite fails where a differing
+environment produces differing figures. Code, configurations and the
+parameter register are published so results may be reproduced, modified or
+contested.
+
+\section{Limitations}
+
+Categorical access barriers are treated as scenario boundaries. Markets
+whose capital controls prohibit the instrument are excluded from the base
+case and reported separately, in the manner of an epidemiological study
+excluding a population to which an intervention cannot lawfully be offered.
+Jurisdiction-specific compliance questions are out of scope as
+implementation-dependent.
+
+China is reported separately and is never included in an aggregate total. At
+approximately \$22.5 trillion it is the largest single pool and would
+dominate any aggregate containing it.
+
+Early-year figures carry the widest uncertainty. The initial segment of a
+diffusion curve is governed almost entirely by unmeasured parameters; small
+changes move the first year by multiples while barely affecting the tenth.
+
+Terminal figures depend heavily on two unmeasured ceilings, being allocation
+and account penetration, each swept but neither measured. Account
+penetration estimates vary threefold across published sources; a reader
+preferring the Federal Reserve figure should read the lower tail of the
+distribution rather than the median.
+
+No competitive or regulatory response is modelled.
+
+\section{Corrections to earlier versions}
+
+Four findings reported during development were subsequently identified as
+artefacts rather than results.
+
+A reported source-pool asymmetry of between 4:1 and 47:1 between
+local-currency holders and stablecoin holders arose from an error in the
+friction calculation, which annualised conversion cost by transaction count
+rather than by the portion of the balance withdrawn, rendering the
+stablecoin cohort's net advantage negative. Corrected, both cohorts adopt.
+
+A reported allocation asymmetry of 3.75 was the ratio of two configuration
+values set by hand, being an input restated rather than a model output.
+Across a range moving that ratio fivefold, the ten-year result varied by 17
+per cent.
+
+A reported awareness threshold, below which adoption fails to become
+self-sustaining, is a property of the diffusion form rather than a feature
+of the instrument. Its location moves with the word-of-mouth coefficient and
+disappears at high values.
+
+A reported parameter leverage ratio of 13.7 was produced by one-at-a-time
+sweeping. Under simultaneous sampling no parameter dominates.
+
+\section{Measurements that would improve this work}
+
+A landing-page conversion test in two target markets with real product
+terms, which would measure the developed-market binding constraint directly.
+A general-population survey screened for savings balance, being the only
+route to demand data uncontaminated by cryptocurrency-user sampling.
+Household penetration data in place of transaction-volume growth for
+diffusion calibration. Market-maker spread indications, once a venue exists.
+
+\vspace{1em}
+\hrule
+\vspace{0.6em}
+{\footnotesize
+Nothing in this document constitutes an offer to sell or a solicitation of
+an offer to buy any security or financial instrument, nor investment,
+financial, legal or tax advice. Outputs are conditional projections derived
+from stated assumptions, many of them unmeasured. They are not forecasts.
+\par}
+
+\end{document}
