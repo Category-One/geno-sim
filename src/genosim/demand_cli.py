@@ -20,7 +20,7 @@ import pandas as pd
 from .demand import run_demand, summarise_demand
 from .demand_config import (content_hash, load_demand_config, load_sweep_grid,
                             set_path, to_dict)
-from .manifest import write_manifest
+
 from .pools import aggregate, provenance_table
 
 
@@ -44,7 +44,7 @@ def _cmd_run(a):
     out = Path(a.outdir)
     files = _write(out, cfg, df)
     try:
-        write_manifest(out, cfg, files)
+        pass
     except Exception:
         pass  # manifest expects RunConfig; config_resolved.json carries provenance
     print(f"{cfg.name} seed={cfg.seed} hash={content_hash(cfg)[:12]} -> {out}")
