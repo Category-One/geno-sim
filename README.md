@@ -1,151 +1,38 @@
-# geno-sim
+# Retail demand for a counter-inflation currency
 
-Reproducible simulation harness for the Geno Project (CIC / GENO).
+An agent-based simulation of household adoption, published so it can be
+reproduced, modified or contested.
 
-**The economic model is not implemented.** Every function in
-`src/genosim/model.py` is a placeholder marked `# >>> REPLACE`. The harness
-exists so the reproducibility machinery is verified *before* your real
-equations go in — that way, when you publish numbers, the only thing anyone
-needs to argue about is the economics.
+**[Read the paper (PDF)](paper/geno-demand-study.pdf)** · seven pages, with the model
+stated as equations.
 
-Any figure produced before you replace those stubs describes the
-placeholders, not your design. Do not cite it.
+## What it found
 
----
+Seventeen behavioural parameters with no direct measurement were sampled
+simultaneously across 8,000 draws, split between a developed-market and a
+high-inflation specification. Adoption occurred in 99.92% of developed-market
+samples and in all high-inflation samples. Median ten-year outcomes were 13.2%
+and 12.5% of household savings balances, with fifth percentiles of 1.1% and 3.9%.
 
-## Quick start
+The binding constraint differs by market: trust in developed economies,
+awareness where inflation is high.
 
-```bash
-pip install -r requirements.txt
-export PYTHONPATH=src
+## What it does not do
 
-python -m genosim verify configs/baseline.yaml           # determinism check
-python -m genosim run   configs/baseline.yaml --outdir results/baseline
-python -m genosim sweep configs/sweep_calibration.yaml --outdir results/sweep
-pytest                                                   # reproducibility suite
-```
+It does not predict adoption — it shows what follows from its assumptions. It
+does not validate the instrument: full purchasing-power protection enters as an
+input and is not tested. It does not measure demand; no dataset on
+general-public demand for an instrument of this kind exists.
 
----
-
-## The reproducibility contract
-
-A run is fully determined by **(config file, seed)**. Nothing else may enter
-the simulator — no environment variables, no wall-clock time, no global RNG.
-
-Five mechanisms enforce this:
-
-1. **Seeded RNG, threaded explicitly.** One `np.random.default_rng(seed)`,
-   created in `engine.run`, passed down. No module in this package calls
-   `np.random` at module level. `test_no_global_rng_leakage` proves it.
-2. **Parameters live in `configs/*.yaml`.** The simulator takes a config path
-   and nothing else. A scenario is a file a reviewer can read, diff, and cite.
-3. **Pinned environment.** `requirements.txt` uses `==`, not `>=`. Float
-   results can shift across library versions.
-4. **Manifest per run.** Every output directory gets `manifest.json`
-   recording config hash, seed, git commit and dirty flag, Python and library
-   versions, and a SHA-256 of each output file.
-5. **Reference fixtures.** `reference/*.json` stores committed summary
-   metrics. `pytest` fails if your environment produces different numbers
-   than the ones in your paper.
-
-Two design choices worth keeping:
-
-- **Model and analysis are separate.** The engine emits raw time series to
-  `series.parquet`. Charts and tables are produced downstream from that file.
-  Reviewers can re-analyse your data without re-running your model.
-- **Exogenous paths are drawn up front,** in fixed order, before the loop.
-  This decouples RNG consumption from branching, so changing `theta_max`
-  doesn't silently reshuffle every random draw and make two runs
-  incomparable.
-
----
-
-## Layout
-
-```
-configs/      scenario definitions — the only source of parameters
-src/genosim/
-  config.py   loading, validation, content-hashing
-  model.py    ← ALL STUBS. Your equations go here.
-  engine.py   deterministic loop, emits raw series
-  manifest.py provenance capture
-  sweep.py    parameter grids and summary metrics
-  cli.py      run / sweep / verify
-tests/        reproducibility suite
-reference/    committed fixtures
-scripts/      make_reference.py
-```
-
----
-
-## What you need to supply
-
-`model.py` has six stubs, in dependency order:
-
-| Function | What it needs from you |
-|---|---|
-| `observe_m_fiat` | The oracle. Data source, update frequency, staleness and failure behaviour. |
-| `cic_supply_delta` | The Paper 3/4 supply rule. |
-| `fee_flows` | Actual fee schedule and destinations. |
-| `measure_velocity`, `geno_delta` | Paper 4 velocity governor and burn triggers. |
-| `price_update` | **Price formation and the demand curve.** |
-| `settle_redemptions` | Redemption policy: eligibility, minimums, fees, gating, spot vs ratio. |
-
-`price_update` deserves emphasis. Whatever you assume there will dominate
-every result the harness produces. State it explicitly in your paper and
-vary it — a robustness claim that holds under only one price model is not a
-robustness claim.
-
----
-
-## Two things the harness encodes as tests
-
-**Backing arithmetic.** `backing_ratio` computes reserve assets over
-redeemable claims. A CIC sale adds proceeds to reserves *and* creates a
-matching claim, so both sides move together and the ratio is unchanged.
-Only `external_capital` — reserves funded without a corresponding claim —
-raises it above 1.0. `test_sale_proceeds_do_not_raise_backing_ratio` asserts
-this. If your design achieves 2x, set `external_capital` and document where
-that capital comes from.
-
-**Accounting invariants.** `test_accounting_invariants` asserts no negative
-reserves, supplies, or claims, and finite prices and velocities, across every
-scenario. A failure means the model is internally inconsistent, which
-invalidates every result built on it — separate from any stress finding.
-
----
-
-## Scenarios
-
-| Config | Tests |
-|---|---|
-| `baseline` | Control. Misbehaviour here is a bug, not a result. |
-| `stress_hyperinflation` | Mirror response when M_fiat goes vertical, with a 5-step oracle lag. |
-| `stress_reserve_shock` | Correlated basket drawdown with claims fixed at par — the floor breaking from the asset side. |
-| `stress_redemption_run` | 40% of claims presented during a demand collapse, with settlement lag. |
-| `sweep_calibration` | 1,620-cell grid over the withheld parameters. Seeds are in the grid so parameter effects can be separated from run-to-run noise. |
-
-The stress scenarios are chosen for a *redemption-backed* design. If backing
-turns out to be weaker than described, add reflexivity scenarios — the
-stabilising token losing value exactly when it's needed.
-
----
-
-## Regenerating reference fixtures
-
-```bash
-python scripts/make_reference.py
-```
-
-Run this deliberately, after an intentional model change, and say why in the
-commit message. Never run it to make a failing test pass — that is the one
-action that quietly destroys the guarantee everything else here provides.
+Read [ASSUMPTIONS.md](ASSUMPTIONS.md) before citing any figure. It records the
+evidential status of every parameter, and documents four findings from earlier
+versions that were later identified as artefacts rather than results.
 
 ---
 
 # Demand model
 
-Separate from the monetary simulation. Models retail adoption of CIC as a
+Models retail adoption of CIC as a
 savings layer that households hold and convert out of to spend.
 
 ```bash
